@@ -139,14 +139,15 @@
         }
         this.tableHeader = tempData
       },
+
       headerCellClassName ({column, columnIndex}) {
-        let active = columnIndex - 1 === this.dragState.end ? 'darg_active_${this.dragState.direction}' : ''
-        let start = columnIndex - 1 === this.dragState.start ? 'darg_start' : ''
-        return '${active} ${start}'
+        let active = columnIndex === this.dragState.end ? `darg_active_${this.dragState.direction}` : ''
+        let start = columnIndex - 1 === this.dragState.start ? `darg_start` : ''
+        return `${active} ${start}`
       },
 
       cellClassName ({column, columnIndex}) {
-        return (columnIndex - 1 === this.dragState.start ? 'darg_start' : '')
+        return (columnIndex - 1 === this.dragState.start ? `darg_start` : '')
       }
     }
   }
@@ -154,7 +155,7 @@
 
 <style lang="scss">
   .w-table {
-    　.el-table .darg_start {
+  　.el-table .darg_start {
       background-color: #f3f3f3;
     }
     .el-table th {
