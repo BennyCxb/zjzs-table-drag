@@ -1,7 +1,14 @@
 <template>
   <div>
     <h1>home</h1>
-    <d-table :data="tableData" :header="tableHeader" :option="tableOption"></d-table>
+    <d-table :data="tableData" :header="tableHeader" :option="tableOption">
+      <el-table-column slot="fixed"
+                       fixed
+                       prop="date"
+                       label="日期"
+                       width="150">
+      </el-table-column>
+    </d-table>
   </div>
 </template>
 <script>
@@ -13,7 +20,6 @@
     },
     data() {
       return {
-        msg: "我是home 组件",
         tableOption: {
           border: true,
           maxHeight: 500

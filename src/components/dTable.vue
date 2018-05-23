@@ -6,8 +6,7 @@
               :max-height="option.maxHeight"
               :style="{ width: parseInt(option.width)+'px' }"
               :cell-class-name="cellClassName"
-              :header-cell-class-name="headerCellClassName"
-    >
+              :header-cell-class-name="headerCellClassName">
       <slot name="fixed"></slot>
       <el-table-column v-for="(col, index) in tableHeader" :key="index"
                        :prop="col.prop"
@@ -26,12 +25,13 @@
 
 <script>
   export default {
-    data() {
+    data () {
       return {
         tableHeader: this.header,
         dragState: {
           start: -9, // 起始元素的 index
-          end: -9, // 移动鼠标时所覆盖的元素 index
+          end: -9, // 结束元素的 index
+          move: -9, // 移动鼠标时所覆盖的元素 index
           dragging: false, // 是否正在拖动
           direction: undefined // 拖动方向
         }
@@ -63,12 +63,19 @@
       }
     },
     methods: {
+      /**
+       * 列标题 Label 区域渲染
+       * @param createElement
+       * @param column
+       * @returns {*}
+       */
       renderHeader (createElement, {column}) {
         return createElement(
           'div', {
             'class': ['thead-cell'],
             on: {
               mousedown: ($event) => { this.handleMouseDown($event, column) },
+              mouseup: ($event) => { this.handleMouseUp($event, column) },
               mousemove: ($event) => { this.handleMouseMove($event, column) }
             }
           }, [
@@ -80,7 +87,11 @@
             })
           ])
       },
-      // 按下鼠标开始拖动
+      /**
+       * 按下鼠标开始拖动
+       * @param e
+       * @param column
+       */
       handleMouseDown (e, column) {
         this.dragState.dragging = true
         this.dragState.start = parseInt(column.columnKey)
@@ -94,20 +105,35 @@
         document.addEventListener('mouseup', this.handleMouseUp);
       },
 
-      // 鼠标放开结束拖动
-      handleMouseUp () {
+      /**
+       * 鼠标放开结束拖动
+       * @param e
+       * @param column
+       */
+      handleMouseUp (e, column) {
+        if (column) {
+          this.dragState.end = parseInt(column.columnKey) // 记录结束列
+        } else {
+          this.dragState.end = this.dragState.start
+        }
         this.dragColumn(this.dragState)
         // 初始化拖动状态
         this.dragState = {
           start: -9,
           end: -9,
+          move: -9,
           dragging: false,
           direction: undefined
         }
         document.removeEventListener('mouseup', this.handleMouseUp);
       },
 
-      // 拖动中
+      /**
+       * 拖动中
+       * @param e
+       * @param column
+       * @returns {boolean}
+       */
       handleMouseMove (e, column) {
         if (this.dragState.dragging) {
           let index = parseInt(column.columnKey) // 记录起始列
@@ -122,7 +148,12 @@
         }
       },
 
-      // 拖动易位
+      /**
+       * 拖动易位
+       * @param start
+       * @param end
+       * @param direction
+       */
       dragColumn ({start, end, direction}) {
         let tempData = []
         let left = direction === 'left'
@@ -140,12 +171,24 @@
         this.tableHeader = tempData
       },
 
+      /**
+       * 拖动动态生成虚线
+       * @param column
+       * @param columnIndex
+       * @returns {string}
+       */
       headerCellClassName ({column, columnIndex}) {
-        let active = columnIndex === this.dragState.end ? `darg_active_${this.dragState.direction}` : ''
+        let active = columnIndex - 1 === this.dragState.end ? `darg_active_${this.dragState.direction}` : ''
         let start = columnIndex - 1 === this.dragState.start ? `darg_start` : ''
         return `${active} ${start}`
       },
 
+      /**
+       * 修改单元格的 className
+       * @param column
+       * @param columnIndex
+       * @returns {string}
+       */
       cellClassName ({column, columnIndex}) {
         return (columnIndex - 1 === this.dragState.start ? `darg_start` : '')
       }
@@ -155,7 +198,7 @@
 
 <style lang="scss">
   .w-table {
-  　.el-table .darg_start {
+    .el-table .darg_start {
       background-color: #f3f3f3;
     }
     .el-table th {
@@ -166,19 +209,20 @@
         width: 0;
         height: 0;
         margin-left: -10px;
+        z-index: 99;
         background: none;
         border: none;
       }
       &.darg_active_left {
         .virtual {
           border-left: 2px dotted #666;
-          z-index: 99;
+          /*z-index: 999;*/
         }
       }
       &.darg_active_right {
         .virtual {
           border-right: 2px dotted #666;
-          z-index: 99;
+          /*z-index: 999;*/
         }
       }
     }
