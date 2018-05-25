@@ -14,6 +14,7 @@
                        :width="col.width"
                        :min-width="col.minWidth"
                        :type="col.type"
+                       :sortable="col.sortable"
                        :header-align="col.headerAlign"
                        :column-key="index.toString()"
                        :render-header="renderHeader"
@@ -111,6 +112,12 @@
        * @param column
        */
       handleMouseUp (e, column) {
+        // 放开鼠标移除拖动时的虚拟容器宽高
+        let virtual = document.getElementsByClassName('virtual')
+        for (let item of virtual) {
+          item.style.height = ''
+          item.style.width = ''
+        }
         if (column) {
           this.dragState.end = parseInt(column.columnKey) // 记录结束列
         } else {

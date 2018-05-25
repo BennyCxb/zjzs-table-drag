@@ -4,6 +4,7 @@
     <d-table :data="tableData" :header="tableHeader" :option="tableOption">
       <el-table-column slot="fixed"
                        fixed
+                       sortable
                        prop="date"
                        label="日期"
                        width="150">
