@@ -185,8 +185,8 @@
        * @returns {string}
        */
       headerCellClassName ({column, columnIndex}) {
-        let active = columnIndex - 1 === this.dragState.end ? `darg_active_${this.dragState.direction}` : ''
-        let start = columnIndex - 1 === this.dragState.start ? `darg_start` : ''
+        let active = columnIndex === this.dragState.end ? `darg_active_${this.dragState.direction}` : ''
+        let start = columnIndex === this.dragState.start ? `darg_start` : ''
         return `${active} ${start}`
       },
 
@@ -197,7 +197,7 @@
        * @returns {string}
        */
       cellClassName ({column, columnIndex}) {
-        return (columnIndex - 1 === this.dragState.start ? `darg_start` : '')
+        return (columnIndex === this.dragState.start ? `darg_start` : '')
       }
     }
   }

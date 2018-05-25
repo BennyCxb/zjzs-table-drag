@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h1>home</h1>
+    <h1>Table</h1>
     <d-table :data="tableData" :header="tableHeader" :option="tableOption">
-      <el-table-column slot="fixed"
-                       fixed
-                       sortable
-                       prop="date"
-                       label="日期"
-                       width="150">
-      </el-table-column>
+      <!--<el-table-column slot="fixed"-->
+                       <!--fixed-->
+                       <!--sortable-->
+                       <!--prop="date"-->
+                       <!--label="日期"-->
+                       <!--width="150">-->
+      <!--</el-table-column>-->
     </d-table>
   </div>
 </template>
@@ -26,6 +26,11 @@
           maxHeight: 500
         },
         tableHeader: [{
+          prop: 'date',
+          label: '日期',
+          sortable: true,
+          sortMethod: this.handleNameSort
+        }, {
           prop: 'name',
           label: '姓名',
           sortable: true,

@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <header>
       <!-- router-link 定义点击后导航到哪个路径下 -->
       <router-link to="/home">home</router-link>
